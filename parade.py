@@ -3,7 +3,10 @@ import time
 import json
 from datetime import datetime
 
-## TEST DATA (IGNORE)
+## TEST DATA 
+'''
+These are the message templates for us to test our functions
+'''
 
 ps = """
 DIS WING FIRST PARADE STATE CONDUCTED ON 160224 @ 0550
@@ -88,28 +91,8 @@ REMARKS: 0
 ## Generates the first parade based on the previous parade data
 def generate(type='first', clean=False, time='UNDEFINED', total_strength=55, prev={}):
     log = ''
-    # For every "list", eg. not in camp, status, medical appointment.., check the date range
-    for item in prev:
-        if item != 'reportSickList' : # Skip for report sick list (no need date range)
-            ls = prev[item]
-            tmp = [] # initialise an empty list
-            for entry in ls:
-                p = re.compile('[0-9]{2}/[0-9]{2}/[0-9]{2}') 
-                dates = p.findall(entry)
-                dates = [datetime.strptime(d, '%d/%m/%y').date() for d in dates]
-                
-                if len(dates) == 0 or dates[0] <= datetime.now().date() <= dates[1]:
-                    print('Adding', entry)
-                    tmp.append(entry)
-                else:
-                    print('Removing', entry)
-                    log += f'{item}: Removed {entry}\n'
 
-                
-            prev[item] = tmp
-
-    
-
+    # Empty template to work on
     base = """
 DIS WING {type} PARADE STATE CONDUCTED ON {date} @ {time}
 
@@ -118,47 +101,87 @@ CADET TOTAL STENGTH: {strength}/{total_strength}
 NOT IN CAMP: {notInCampCount}
 
 {notInCampList}
+
 REPORT SICK: {reportSickCount}
 
 {reportSickList}
+
 MEDICAL APPOINTMENT: {medApptCount}
 
 {medApptList}
+
 STATUS: {statusCount}
 
 {statusList}
+
 OTHERS: {othersCount}
 
 {othersList}
+
 REMARKS: 0
 
 
     """
 
-    def convert(x):
-        tmp = ''
-        for item in x:
-            tmp += item + '\n'
-        return tmp
+    
 
+    # For every "list", eg. not in camp, status, medical appointment.., check the date range
+    for item in prev:
+        if item != 'reportSickList' : # Skip for report sick list (no need date range)
+            ls = prev[item]
+            tmp = [] # initialise an empty list
+
+            # For every name in each list (status, not in camp..)
+            for entry in ls:
+
+                # Use a specific pattern to extract the date ranges in the record
+                '''
+                Example: ME4-T LING ZHI PENG - 3D LD (14/02/24 - 16/02/24) <--date
+                '''
+                p = re.compile('[0-9]{2}/[0-9]{2}/[0-9]{2}') 
+                dates = p.findall(entry)
+
+                # Convert the 'string' of the date to a readable type by python
+                dates = [datetime.strptime(d, '%d/%m/%y').date() for d in dates]
+                
+                # If today is still within the date range, then include it in the new parade state
+                if len(dates) == 0 or dates[0] <= datetime.now().date() <= dates[1]:
+                    print('Adding', entry)
+                    tmp.append(entry)
+                else:
+                    # Else, remove it
+                    print('Removing', entry)
+                    log += f'{item}: Removed {entry}\n'
+
+                
+            prev[item] = tmp
+
+    
+    
+    # Sudo (mini) function to join the list of names to a string for formatting
+    convert = lambda x: '\n'.join(x)
+
+    # Filling up the params in the base string and generating a filled template
     new = base.format(reportSickCount=len(prev['reportSickList']),
-                      reportSickList=convert(prev['reportSickList']),
+                      reportSickList=convert(prev['reportSickList']) or '<i>1) Eg. ME4-T JOHN TAN - VOMIT</i>',
                       medApptCount=len(prev['medApptList']),
-                      medApptList=convert(prev['medApptList']),
+                      medApptList=convert(prev['medApptList']) or '<i>1) Eg. ME4-T JOHN TAN - OPHTHALMOLOGY APPOINTMENT, 0930H (19/02/24 - 19/02/24)</i>',
                       statusCount=len(prev['statusList']),
                       statusList=convert(prev['statusList']),
                       othersCount=len(prev['othersList']),
                       othersList=convert(prev['othersList']),
                       notInCampCount=len(prev['notInCampList']),
-                      notInCampList=convert(prev['notInCampList']),
+                      notInCampList=convert(prev['notInCampList']) or '<i>1) Eg. ME4-T JOHN TAN - 1D MC, OPHTHALMOLOGY APPOINTMENT (19/02/24 - 19/02/24)</i>',
                       date=datetime.now().strftime('%d%m%y'),
                       time=time,
                       strength=total_strength-len(prev['notInCampList']),
                       total_strength=total_strength,
-                      type = type)
+                      type = type.upper())
 
     return new, log
 
+
+# Save the state 
 def cache(parade_state):
 
     patterns = {'notInCampList':'(?<=NOT IN CAMP: )[0-9]{1,2}(.*\n)*(?=REPORT)',

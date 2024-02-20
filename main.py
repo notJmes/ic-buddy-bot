@@ -43,8 +43,8 @@ def generate(message):
 def generate_type(message):
 
     # Extract the parameter "first" or "last"
-    state_type = message.text.split(' ')[-1].strip() 
-    state_type = 'first' if 'f' in state_type else 'last'
+    state_type = message.text.strip()
+    state_type = 'FIRST' if 'F' in state_type.upper() else 'LAST'
 
     global data
     data[message.from_user.username] = {'state_type': state_type}
@@ -54,10 +54,22 @@ def generate_type(message):
 
 def generate_time(message):
 
-    time = message.text.strip()
+    data[message.from_user.username]['state_time'] = message.text.strip()
 
+    bot.reply_to(message, 'What is the total strength?')
+    bot.register_next_step_handler(message, generate_strength)
+
+def generate_strength(message):
+
+    try:
+        strength = int(message.text.strip())
+    except:
+        bot.reply_to(message, 'Provide a proper input')
+        bot.register_next_step_handler(message, generate_strength)
+        return
     global data
     state_type = data[message.from_user.username]['state_type']
+    state_time = data[message.from_user.username]['state_time']
 
     # Open the JSON file containing previous parade state data
     with open('parade.json', 'r') as f: 
@@ -68,8 +80,8 @@ def generate_time(message):
             clean = True
         
     # Generate
-    new, log = parade.generate(state_type, clean=clean, time=time, prev=old_state)
-    bot.reply_to(message, new)
+    new, log = parade.generate(state_type, clean=clean, time=state_time, total_strength=strength, prev=old_state)
+    bot.reply_to(message, new, parse_mode="HTML")
     bot.reply_to(message, f"The following changes were made:\n```\n{log}\n```", parse_mode="MarkdownV2")
 
 @bot.message_handler(commands=['echo'])
