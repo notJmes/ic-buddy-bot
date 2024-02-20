@@ -1,1 +1,4 @@
 token.txt
+cadet_names.txt
+*.json
+__pycache__
