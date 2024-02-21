@@ -163,15 +163,15 @@ REMARKS: 0
 
     # Filling up the params in the base string and generating a filled template
     new = base.format(reportSickCount=len(prev['reportSickList']),
-                      reportSickList=convert(prev['reportSickList']) or '<i>1) Eg. ME4-T JOHN TAN - VOMIT</i>',
+                      reportSickList=convert(prev['reportSickList']),
                       medApptCount=len(prev['medApptList']),
-                      medApptList=convert(prev['medApptList']) or '<i>1) Eg. ME4-T JOHN TAN - OPHTHALMOLOGY APPOINTMENT, 0930H (19/02/24 - 19/02/24)</i>',
+                      medApptList=convert(prev['medApptList']),
                       statusCount=len(prev['statusList']),
                       statusList=convert(prev['statusList']),
                       othersCount=len(prev['othersList']),
                       othersList=convert(prev['othersList']),
                       notInCampCount=len(prev['notInCampList']),
-                      notInCampList=convert(prev['notInCampList']) or '<i>1) Eg. ME4-T JOHN TAN - 1D MC, OPHTHALMOLOGY APPOINTMENT (19/02/24 - 19/02/24)</i>',
+                      notInCampList=convert(prev['notInCampList']),
                       date=datetime.now().strftime('%d%m%y'),
                       time=time,
                       strength=total_strength-len(prev['notInCampList']),
