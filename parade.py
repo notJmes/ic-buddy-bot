@@ -225,7 +225,7 @@ def delete(parade_state, update_list, name):
     with open('parade.json', 'w') as f:
         json.dump(parade_state, f, indent=4)
         
-    return new_entry
+
 def autocomplete(message): 
  
   # Find all occurences of short-form name in parade state message 
