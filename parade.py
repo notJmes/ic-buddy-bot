@@ -180,7 +180,6 @@ REMARKS: 0
 
     return new, log
 
-
 # Save the state 
 def cache(parade_state):
 
@@ -200,9 +199,33 @@ def cache(parade_state):
     
     return out
 
-import re 
+def add(parade_state, update_list, data):
+    new_line = autocomplete(data)
+    parade_state[update_list].append(new_line)
+
+    with open('parade.json', 'w') as f:
+        json.dump(parade_state, f, indent=4)
+
+    return parade_state
+
+def modify(parade_state, update_list, name, new_entry):
+    new_entry = autocomplete(new_entry)
+    index = parade_state[update_list].index(name)
+    parade_state[update_list][index] = new_entry
+    
+    with open('parade.json', 'w') as f:
+        json.dump(parade_state, f, indent=4)
  
+    return new_entry
 ## Replace short-form names in [] with rank & full names of cadets 
+
+def delete(parade_state, update_list, name):
+    parade_state = parade_state[update_list].remove(name)
+
+    with open('parade.json', 'w') as f:
+        json.dump(parade_state, f, indent=4)
+        
+    return new_entry
 def autocomplete(message): 
  
   # Find all occurences of short-form name in parade state message 
@@ -291,3 +314,10 @@ if __name__ == '__main__':
 
     data = autocomplete(ps_autocomplete)
     print(data)
+
+    time.sleep(1)
+    print('[+] TESTING Add')
+    print()
+
+    updated = add(cache(ps), 'notInCampList', '[russell] - 3D MC, HIV, (20/02/24-22/02/24)')
+    print(updated)
