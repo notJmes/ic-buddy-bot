@@ -10,7 +10,6 @@ bot = telebot.TeleBot(TOKEN)
 cleaning_areas = [
     "Toilet 1",
     "Toilet 2",
-    "Toilet 3",
     "Short wing",
     "Long wing",
     "Main staircase",
@@ -76,6 +75,12 @@ def RotateCleaningRoster(weeknum, areas, lvl_bunks):
             lvl_cleaningroster[key] = value     #Assign the bunk number as dictionary keys for the cleaning area (e.g. {02-10 : Toilet 1} )
             areas.remove(value)     #Remove the value from the areas list after it has been assigned a bunk number
             break                  #Break to exit the child loop and back to the parent loop
+        
+    # If there are more bunk numbers than cleaning areas, assign the remaining bunks to help clean toilet
+    if len(lvl_bunks) > len(cleaning_areas):    
+        for bunk in rotated_lvl_bunks[len(cleaning_areas):]:
+            lvl_cleaningroster[bunk] = "Extra bunks go help clean the toilet"
+    
     return lvl_cleaningroster       #Return the completed dictionary rotated roster
 
 
