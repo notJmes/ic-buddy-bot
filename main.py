@@ -162,10 +162,12 @@ def generate_strength(message, data):
         except:
             clean = True
         
-    
+    # Generate and send the new parade state to the user
     new, log = parade.generate(state_type, clean=clean, time=state_time, total_strength=strength, prev=old_state)
     bot.reply_to(message, new, parse_mode="HTML")
     # bot.reply_to(message, f"The following changes were made:\n```\n{log}\n```", parse_mode="MarkdownV2")
+
+### TEST COMMANDS ###
 
 @bot.message_handler(commands=['echo'])
 def welcome(message):
@@ -175,8 +177,11 @@ def welcome(message):
 def welcome(message):
     bot.reply_to(message, 'stupid jason.')
 
-def add_entry_menu(message):
+####################
 
+
+def add_entry_menu(message):
+    # Receives decision from the user on which list he wants to add on to
     update_list = message.text.strip()
     parade_state = {}
 
@@ -187,8 +192,9 @@ def add_entry_menu(message):
         except:
             parade_state = parade.generate()
 
+    # This if/else translates the button choice to the key in the json file
     if update_list == 'Not in Camp':
-        update_list = 'notInCampList'
+        update_list = 'notInCampList' 
     elif update_list == 'Report Sick':
         update_list = 'reportSickList'
     elif update_list == 'Medical Appt':
@@ -215,7 +221,7 @@ def add_entry(message, parade_state, update_list):
     bot.reply_to(message, '\n'.join(updated_parade_state[update_list]))
 
 def modify_entry_menu(message):
-    
+    # Similar to the add menu, but its modifying existing users instead
     update_list = message.text.strip()
     parade_state = {}
 
@@ -242,12 +248,14 @@ def modify_entry_menu(message):
 
     selected_list = parade_state[update_list]
 
+    # Prompts the user to select the cadet to modify
     bot.reply_to(message, "Select an entry to modify", reply_markup=select_names_markup(selected_list))
     bot.register_next_step_handler(message, modify_entry, parade_state, update_list)
 
 def modify_entry(message, parade_state, update_list):
     name = message.text.strip()
 
+    # Prompts users if they want to edit or delete the selected cadet
     def del_edit_markup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         for item in ['Edit','Delete']:
