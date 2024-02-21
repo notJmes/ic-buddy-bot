@@ -1,8 +1,6 @@
 import telebot
 import datetime
 
-from telebot import types # Extra UI libraries for the bot
-
 # Replace 'YOUR_TELEGRAM_BOT_TOKEN' with your actual bot token
 TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
 
@@ -12,6 +10,7 @@ bot = telebot.TeleBot(TOKEN)
 cleaning_areas = [
     "Toilet 1",
     "Toilet 2",
+    "Toilet 3",
     "Short wing",
     "Long wing",
     "Main staircase",
@@ -20,9 +19,7 @@ cleaning_areas = [
     "Small common area 1",
     "Small common area 2",
     "Small common area 3",
-    "Level 1 or level 4",
-    "Break",
-    "Break",
+    "Level 1 or level 4"
 ]
 
 
@@ -88,13 +85,6 @@ def RotateCleaningRoster(weeknum, areas, lvl_bunks):
 def start(message):
     bot.reply_to(message, 'Welcome! Use /lvl2_roster or /lvl3_roster to generate a cleaning roster for this week.')
     
-    
-# Error handler
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, "Sorry, I didn't understand that command.")
-
-
 
 #Generate roster for Level 2
 @bot.message_handler(commands=['lvl2_roster'])
@@ -123,7 +113,12 @@ def GenerateRoster(message):
 
     bot.reply_to(message, 'Level 3 Cleaning Roster for this week:\n' + lvl3_roster)     #Output the entire roster as a message in telegram
 
-    
+
+# Error handler
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, "Sorry, I didn't understand that command.")
+
 
 # Polling to start the bot
 bot.polling()
