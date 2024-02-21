@@ -21,6 +21,8 @@ except:
 
 data = {}
 
+# {'key':'value'} | {'car':4, 'bike':2}
+
 bot = telebot.TeleBot(TOKEN)
 
 # Creating the menu for first or last parade
