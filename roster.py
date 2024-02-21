@@ -79,49 +79,49 @@ def RotateCleaningRoster(weeknum, areas, lvl_bunks):
     return lvl_cleaningroster       #Return the completed dictionary rotated roster
 
 
+# if __name__ == '__main__':
+#     # Start command handler
+#     @bot.message_handler(commands=['start'])
+#     def start(message):
+#         bot.reply_to(message, 'Welcome! Use /lvl2_roster or /lvl3_roster to generate a cleaning roster for this week.')
+        
 
-# Start command handler
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message, 'Welcome! Use /lvl2_roster or /lvl3_roster to generate a cleaning roster for this week.')
-    
+#     #Generate roster for Level 2
+#     @bot.message_handler(commands=['lvl2_roster'])
+#     def GenerateRoster(message):
+#         weeknum = GetWeekNum()      #Call GetWeekNum() function and assign the output to weeknum
+#         lvl2_roster = ""            #Create empty roster string
+#         cleaning_areas_copy = cleaning_areas[:]   #Make a copy of cleaning_areas list
+#         cleaning_areas_copy[-1] = "Level 1"      #Change the last list value to 'Level 1'
+#         lvl2_cleaningroster = RotateCleaningRoster(weeknum, cleaning_areas_copy, lvl2_bunks)    #Call RotateCleaningRoster() function with relevant variables and assign the dictionary output to lvl2_cleaningroster
+#         for key, value in lvl2_cleaningroster.items():      #Change the dict key and value into an item pair as list values and then loop true with the variables 'key' 'value'
+#             lvl2_roster += f"{key} : {value}\n"     #Append the string to the variable 'lvl2_roster' as a new line after every iteration
+        
+#         bot.reply_to(message, 'Level 2 Cleaning Roster for this week:\n' + lvl2_roster) #Output the entire roster as a message in telegram
+        
 
-#Generate roster for Level 2
-@bot.message_handler(commands=['lvl2_roster'])
-def GenerateRoster(message):
-    weeknum = GetWeekNum()      #Call GetWeekNum() function and assign the output to weeknum
-    lvl2_roster = ""            #Create empty roster string
-    cleaning_areas_copy = cleaning_areas[:]   #Make a copy of cleaning_areas list
-    cleaning_areas_copy[-1] = "Level 1"      #Change the last list value to 'Level 1'
-    lvl2_cleaningroster = RotateCleaningRoster(weeknum, cleaning_areas_copy, lvl2_bunks)    #Call RotateCleaningRoster() function with relevant variables and assign the dictionary output to lvl2_cleaningroster
-    for key, value in lvl2_cleaningroster.items():      #Change the dict key and value into an item pair as list values and then loop true with the variables 'key' 'value'
-        lvl2_roster += f"{key} : {value}\n"     #Append the string to the variable 'lvl2_roster' as a new line after every iteration
-    
-    bot.reply_to(message, 'Level 2 Cleaning Roster for this week:\n' + lvl2_roster) #Output the entire roster as a message in telegram
-    
+#     #Generate roster for Level 3
+#     @bot.message_handler(commands=['lvl3_roster'])
+#     def GenerateRoster(message):
+#         weeknum = GetWeekNum()      #Call GetWeekNum() function and assign the output to weeknum
+#         lvl3_roster = ""            #Create empty roster string
+#         cleaning_areas_copy = cleaning_areas[:]   #Make a copy of cleaning_areas list
+#         cleaning_areas_copy[-1] = "Level 4"      #Change the last list value to 'Level 4'
+#         lvl3_cleaningroster = RotateCleaningRoster(weeknum, cleaning_areas_copy, lvl3_bunks)    #Call RotateCleaningRoster() function with relevant variables and assign the dictionary output to lvl3_cleaningroster
+#         for key, value in lvl3_cleaningroster.items():      #Change the dict key and value into an item pair as list values and then loop true with the variables 'key' 'value'
+#             lvl3_roster += f"{key} : {value}\n"     #Append the string to the variable 'lvl3_roster' as a new line after every iteration
 
-#Generate roster for Level 3
-@bot.message_handler(commands=['lvl3_roster'])
-def GenerateRoster(message):
-    weeknum = GetWeekNum()      #Call GetWeekNum() function and assign the output to weeknum
-    lvl3_roster = ""            #Create empty roster string
-    cleaning_areas_copy = cleaning_areas[:]   #Make a copy of cleaning_areas list
-    cleaning_areas_copy[-1] = "Level 4"      #Change the last list value to 'Level 4'
-    lvl3_cleaningroster = RotateCleaningRoster(weeknum, cleaning_areas_copy, lvl3_bunks)    #Call RotateCleaningRoster() function with relevant variables and assign the dictionary output to lvl3_cleaningroster
-    for key, value in lvl3_cleaningroster.items():      #Change the dict key and value into an item pair as list values and then loop true with the variables 'key' 'value'
-        lvl3_roster += f"{key} : {value}\n"     #Append the string to the variable 'lvl3_roster' as a new line after every iteration
-
-    bot.reply_to(message, 'Level 3 Cleaning Roster for this week:\n' + lvl3_roster)     #Output the entire roster as a message in telegram
-
-
-# Error handler
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, "Sorry, I didn't understand that command.")
+#         bot.reply_to(message, 'Level 3 Cleaning Roster for this week:\n' + lvl3_roster)     #Output the entire roster as a message in telegram
 
 
-# Polling to start the bot
-bot.polling()
+#     # Error handler
+#     @bot.message_handler(func=lambda message: True)
+#     def echo_all(message):
+#         bot.reply_to(message, "Sorry, I didn't understand that command.")
+
+
+#     # Polling to start the bot
+#     bot.polling()
 
 
 #################### IGNORE THIS ##############################
